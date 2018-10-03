@@ -7,7 +7,8 @@ namespace Banking.Models.Domain {
         //private string _accountNumber;
         #region Fields
         //public const decimal WithdrawCost = 0.10M;
-        private decimal _balance; 
+        private decimal _balance;
+        private ICollection<Transaction> _transactions;
         #endregion
 
         #region Properties
@@ -26,6 +27,12 @@ namespace Banking.Models.Domain {
                 _balance = value;
             }
         }
+
+        public IEnumerable<Transaction> Transactions {
+            get {
+                return _transactions;
+            }
+        }
         #endregion
 
         #region Constructors
@@ -35,6 +42,7 @@ namespace Banking.Models.Domain {
         }
         public BankAccount(string accountNumber) {
             AccountNumber = accountNumber;
+            _transactions = new List<Transaction>();
         }
 
         public BankAccount(string accountNumber, decimal balance) : this(accountNumber) {
@@ -51,15 +59,17 @@ namespace Banking.Models.Domain {
         //}
 
         //public decimal Balance { get; private set; }
-        
+
 
         #region Methods
         public void Deposit(decimal amount) {
             Balance += amount;
+            _transactions.Add(new Transaction(amount, TransactionType.Deposit));
         }
 
         public void Withdraw(decimal amount) {
             Balance -= amount;
+            _transactions.Add(new Transaction(amount, TransactionType.Withdraw));
         }
         #endregion
     }
